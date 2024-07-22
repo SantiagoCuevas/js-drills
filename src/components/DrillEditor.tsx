@@ -1,7 +1,7 @@
 import { javascript } from "@codemirror/lang-javascript";
 import { tokyoNight } from "@uiw/codemirror-theme-tokyo-night";
 import ReactCodeMirror from "@uiw/react-codemirror";
-import { useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 const extensions = [javascript()];
 
@@ -13,7 +13,10 @@ interface DrillEditorProps {
 export const DrillEditor = (props: DrillEditorProps) => {
   const { initialJS, setJS } = props;
   const [localCode, setLocalCode] = useState(initialJS);
-  const ref = useRef(initialJS);
+
+  useEffect(() => {
+    setLocalCode(initialJS);
+  }, [initialJS]);
 
   return (
     <div>
@@ -29,8 +32,8 @@ export const DrillEditor = (props: DrillEditorProps) => {
         <button
           className="bg-red-500 p-2 rounded-lg w-52"
           onClick={() => {
-            setLocalCode(ref.current);
-            setJS(ref.current);
+            setLocalCode(initialJS);
+            setJS(initialJS);
           }}
         >
           Reset
