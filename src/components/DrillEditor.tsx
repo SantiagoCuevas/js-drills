@@ -1,27 +1,43 @@
 import { javascript } from "@codemirror/lang-javascript";
 import { tokyoNight } from "@uiw/codemirror-theme-tokyo-night";
 import ReactCodeMirror from "@uiw/react-codemirror";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 const extensions = [javascript()];
 
-export const DrillEditor = () => {
-  const [code, setCode] = useState("console.log('Hello World')");
+interface DrillEditorProps {
+  initialJS: string;
+  setJS: (code: string) => void;
+}
+
+export const DrillEditor = (props: DrillEditorProps) => {
+  const { initialJS, setJS } = props;
+  const [localCode, setLocalCode] = useState(initialJS);
+  const ref = useRef(initialJS);
 
   return (
     <div>
       <ReactCodeMirror
-        value={code}
+        value={localCode}
         height="55vh"
         width="50vw"
         theme={tokyoNight}
         extensions={extensions}
-        onChange={setCode}
+        onChange={setLocalCode}
       />
-      <div className="flex w-full justify-end mt-6">
+      <div className="flex w-full justify-end mt-6 gap-4">
         <button
-          onClick={() => eval(code)}
-          className="bg-indigo-500 p-2 rounded-lg"
+          className="bg-red-500 p-2 rounded-lg w-52"
+          onClick={() => {
+            setLocalCode(ref.current);
+            setJS(ref.current);
+          }}
+        >
+          Reset
+        </button>
+        <button
+          className="bg-indigo-500 p-2 rounded-lg w-52"
+          onClick={() => setJS(localCode)}
         >
           Submit
         </button>
